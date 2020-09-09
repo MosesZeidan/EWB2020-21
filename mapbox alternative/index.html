@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+
+<script>
+
+mapboxgl.accessToken = 'pk.eyJ1IjoibW9zZXN6ZWlkYW4iLCJhIjoiY2tlZWp2ejNsMGwyODJ1bGc2MXM2ankyOSJ9.HcazLJAA406NxQi4VFHUeA';
+
+// Set bounds to University of Pennsylvania
+var bounds = [
+[-75.209953, 39.942741], // Southwest coordinates
+[-75.180219, 39.9585] // Northeast coordinates
+];
+
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/streets-v11',
+  center: [-75.193712, 39.952305], //location of the Broken Button, in Lng Lat
+  pitch: 30, // pitch in degrees
+  bearing: -10, // bearing in degrees
+  zoom: 16,
+  maxBounds: bounds,
+  antialias: true  //I believe this will be important to keep the 3D shapes looking smooth
+});
+
+// disable map rotation using right click + drag, FOR NOW
+map.dragRotate.disable();
+ 
+// disable map rotation using touch rotation gesture
+map.touchZoomRotate.disableRotation();
+
+
+//POLYGON FOR HUNTSMAN HALL EXAMPLE
+map.on('load', function() {
+    map.addSource('huntsman', {
+        'type': 'geojson',
+        'data': {
+            'type': 'Feature',
+            'geometry': {
+                'type': 'Polygon',
+                'coordinates': [
+                        [
+                            [-75.197855, 39.952474],
+                            [-75.198608, 39.952572],
+                            [-75.198601, 39.952600],
+                            [-75.198653, 39.952607],
+                            [-75.198473, 39.953463],
+                            [-75.198163, 39.953456],
+                            [-75.197859, 39.953377],
+                            [-75.197798, 39.953370],
+                            [-75.197934, 39.952718],
+                            [-75.197758, 39.952692],
+                            [-75.197774, 39.952616],
+                            [-75.197822, 39.952621],
+                            [-75.197855, 39.952474]
+                        ]
+                ]
+            }
+        }
+    });
+    map.addLayer({
+        'id': 'huntsmanHall2D',
+        'type': 'fill',
+        'source': 'huntsman',
+        'layout': {},
+        'paint': {
+            'fill-color': '#088', //maybe just make brown and make it clear that u click the building base
+            'fill-opacity': 0.5
+        }
+    });
+
+    // When a click event occurs on a feature in the states layer, open a popup at the
+    // location of the click, with description HTML from its properties.
+    map.on('click', 'huntsmanHall2D', function(e) {
+        new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML("<h1>Huntsman Hall</h1>")
+            .addTo(map);
+    });
+        
+    // Change the cursor to a pointer when the mouse is over the states layer.
+    map.on('mouseenter', 'huntsmanHall2D', function() {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+        
+    // Change it back to a pointer when it leaves.
+    map.on('mouseleave', 'huntsmanHall2D', function() {
+        map.getCanvas().style.cursor = '';
+    });
+});
+
+//3D EXTRUSION FOR HUNTSMAN EXAMPLE
+map.on('load', function() {
+    map.addSource('floorplan', {
+        'type': 'geojson',
+        'data':
+        {
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "color": "brown",
+        "name": "huntsman",
+        "height": 20,
+        "base_height": 0
+      },
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              -75.198444,
+              39.953459
+            ],
+            [
+              -75.198652,
+              39.952613
+            ],
+            [
+              -75.19859,
+              39.952606
+            ],
+            [
+              -75.198599,
+              39.952574
+            ],
+            [
+              -75.197858,
+              39.952475
+            ],
+            [
+              -75.197831,
+              39.952651
+            ],
+            [
+              -75.197984,
+              39.952671
+            ],
+            [
+              -75.197972,
+              39.952714
+            ],
+            [
+              -75.197929,
+              39.952705
+            ],
+            [
+              -75.197811,
+              39.953212
+            ],
+            [
+              -75.197881,
+              39.953216
+            ],
+            [
+              -75.197882,
+              39.953291
+            ],
+            [
+              -75.197922,
+              39.953353
+            ],
+            [
+              -75.198004,
+              39.953416
+            ],
+            [
+              -75.198092,
+              39.953444
+            ],
+            [
+              -75.198189,
+              39.953443
+            ],
+            [
+              -75.198225,
+              39.953429
+            ],
+            [
+              -75.198444,
+              39.953459
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "af6b9eb515a935a0700640be50e27015"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "huntsman",
+        "color": "brown",
+        "height": 35,
+        "base_height": 20
+      },
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              -75.198216,
+              39.953455
+            ],
+            [
+              -75.198298,
+              39.953446
+            ],
+            [
+              -75.19837,
+              39.953417
+            ],
+            [
+              -75.198434,
+              39.953366
+            ],
+            [
+              -75.198469,
+              39.953305
+            ],
+            [
+              -75.198476,
+              39.953237
+            ],
+            [
+              -75.198454,
+              39.95317
+            ],
+            [
+              -75.198404,
+              39.953115
+            ],
+            [
+              -75.198333,
+              39.953075
+            ],
+            [
+              -75.198248,
+              39.953055
+            ],
+            [
+              -75.198158,
+              39.953059
+            ],
+            [
+              -75.198077,
+              39.953084
+            ],
+            [
+              -75.198011,
+              39.953128
+            ],
+            [
+              -75.19797,
+              39.953186
+            ],
+            [
+              -75.197953,
+              39.953249
+            ],
+            [
+              -75.197965,
+              39.953313
+            ],
+            [
+              -75.198001,
+              39.95337
+            ],
+            [
+              -75.198059,
+              39.953417
+            ],
+            [
+              -75.198133,
+              39.953446
+            ],
+            [
+              -75.198176,
+              39.953451
+            ],
+            [
+              -75.198216,
+              39.953455
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "eac84ea1fac40c0e96dcdc35c5bafca8"
+    }
+  ],
+  "type": "FeatureCollection"
+}
+    });
+    map.addLayer({
+        'id': 'room-extrusion',
+        'type': 'fill-extrusion',
+        'source': 'floorplan',
+        'paint': {
+            // See the Mapbox Style Specification for details on data expressions.
+            // https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions
+            
+            // Get the fill-extrusion-color from the source 'color' property.
+            'fill-extrusion-color': ['get', 'color'],
+            
+            // Get fill-extrusion-height from the source 'height' property.
+            'fill-extrusion-height': ['get', 'height'],
+            
+            // Get fill-extrusion-base from the source 'base_height' property.
+            'fill-extrusion-base': ['get', 'base_height'],
+            
+            // Make extrusions slightly opaque for see through indoor walls.
+            'fill-extrusion-opacity': 0.5
+        }
+    });
+
+
+});
+
+
+
+
+// more code will go here!
+
+
+
+</script>
+
+</body>
+</html>
